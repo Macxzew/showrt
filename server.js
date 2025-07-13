@@ -10,10 +10,11 @@ const DATA_FILE = path.join(__dirname, 'urls.json');
 
 // Middleware pour parser les requêtes JSON
 app.use(express.json());
+
 // Middleware pour servir les fichiers statiques
 app.use(express.static('public'));
 
-// Vérifie si le fichier JSON existe, sinon le crée
+// Vérifie si le fichier JSON existe, sinon le crée avec un objet vide
 if (!fs.existsSync(DATA_FILE)) {
   fs.writeFileSync(DATA_FILE, JSON.stringify({}), 'utf8');
 }
@@ -72,7 +73,7 @@ function sendRefresh() {
   });
 }
 
-// Planifier l'envoi de "refresh" après 2 minutes
+// Planifier l'envoi de "refresh" après 2 minutes (120000ms)
 setTimeout(sendRefresh, 120000);
 
 app.post('/shorten', async (req, res) => {
@@ -80,7 +81,7 @@ app.post('/shorten', async (req, res) => {
   url = normalizeUrl(url);
 
   try {
-    // Vérif l'accessibilité de l'URL
+    // Vérifie l'accessibilité de l'URL
     await axios.head(url);
     const data = readData();
 
@@ -145,7 +146,7 @@ app.post('/verify/:id', (req, res) => {
   const data = readData();
   const entry = data[id];
 
-  // Vérif si l'entrée existe et si un mdp est défini
+  // Vérification si l'entrée existe et si un mot de passe est défini
   if (!entry) {
     return res.status(404).send('URL non trouvée');
   }
