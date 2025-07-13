@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="https://cdn.glitch.global/e674a112-ca8d-47bf-84c4-9669f6ecac04/favicon.png?v=1730160130472" />
+    <title>Showrt</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px 30px 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+        }
+        input, button {
+            padding: 8px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #toggleOptionsButton {
+            position: absolute; /* Position absolue pour placer le bouton */
+            bottom: 10px; /* Espacement du bas */
+            right: 10px; /* Espacement de droite */
+            font-size: 5px;
+            color: white;
+        
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .heart {
+            color: red;
+        }
+        .message {
+            font-size: 1.0em;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Raccourcisseur d'URL</h1>
+        <input type="text" id="urlInput" placeholder="🔗 URL" autofocus>
+        <div id="passwordOptions" style="display: none;">
+            <label for="passwordInput"></label>
+            <input type="password" id="passwordInput" placeholder="🔒 Mot de passe">
+        </div>
+        <button onclick="toggleOptions()" id="toggleOptionsButton">➕</button>
+        <button onclick="shortenURL()">Raccourcir</button>
+        <p id="result" class="message"></p>
+    </div>
+    <div class="footer">
+        Made with <span class="heart">&hearts;</span> by Macxzew
+    </div>
+
+    <script>
+        async function shortenURL() {
+            const url = document.getElementById('urlInput').value;
+            const password = document.getElementById('passwordInput').value; // Récupère le mot de passe saisi
+            const resultElement = document.getElementById('result');
+            try {
+                const response = await fetch('/shorten', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url, password }), // Envoie le mot de passe également
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    resultElement.textContent = `${data.shortUrl}`;
+                    resultElement.className = 'message success'; // Applique le style pour succès
+                } else {
+                    throw new Error(data.error || 'URL invalide.');
+                }
+            } catch (error) {
+                resultElement.textContent = 'URL invalide.'; // Texte d'erreur
+                resultElement.className = 'message error'; // Applique le style pour erreur
+            }
+        }
+
+        function toggleOptions() {
+            const passwordOptions = document.getElementById('passwordOptions');
+            const toggleButton = document.getElementById('toggleOptionsButton');
+
+            if (passwordOptions.style.display === 'none') {
+                passwordOptions.style.display = 'block';
+                toggleButton.textContent = '-';
+            } else {
+                passwordOptions.style.display = 'none';
+                toggleButton.textContent = '+';
+            }
+        }
+    </script>
+</body>
+</html>
