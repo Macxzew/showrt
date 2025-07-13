@@ -2,7 +2,10 @@
 
 <p align="center">
     <img alt="Node.js" src="https://img.shields.io/badge/node-14%2B-green?logo=node.js">
-    <img alt="License" src="https://img.shields.io/badge/License-ISC-blue.svg" />
+    <img alt="License" src="https://img.shields.io/badge/License-MIT-green.svg" />
+    <a href="https://showrt.onrender.com/">
+      <img alt="Render" src="https://img.shields.io/badge/live%20demo-render-purple?logo=render" />
+    </a>
 </p>
 
 > **Showrt** is a simple, fast and secure URL shortener built with **Node.js** and **Express**.
